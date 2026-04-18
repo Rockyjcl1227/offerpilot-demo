@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OfferPilot - 求职申请管理看板</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-block">
+          <div class="brand-mark">OP</div>
+          <div>
+            <p class="eyebrow">Campus Job OS</p>
+            <h1>OfferPilot</h1>
+            <p class="subtle">把求职申请变成清晰、可执行的工作流</p>
+          </div>
+        </div>
+
+        <nav class="nav-list" id="nav-list"></nav>
+        <section class="sidebar-panel" id="sidebar-panel"></section>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <div class="role-switch" id="role-switch">
+              <button class="role-chip active" data-role="user">用户端</button>
+              <button class="role-chip" data-role="manager">管理端</button>
+            </div>
+            <h2 id="view-title">今日总览</h2>
+          </div>
+          <div class="topbar-actions">
+            <label class="search-box">
+              <span>搜索岗位 / 公司 / 材料</span>
+              <input id="global-search" type="text" placeholder="例如：美团、作品集、产品经理" />
+            </label>
+            <button class="primary-button" id="add-application-btn">新增申请</button>
+          </div>
+        </header>
+
+        <section class="view active" data-view-panel="dashboard">
+          <div class="hero-grid">
+            <div class="hero-card" id="hero-card"></div>
+            <div class="deadline-card" id="deadline-card"></div>
+          </div>
+
+          <div class="metric-grid" id="metric-grid"></div>
+
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Next Actions</p>
+                  <h3>你接下来最该做的事</h3>
+                </div>
+              </div>
+              <div id="task-list" class="stack-list"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Upcoming Timeline</p>
+                  <h3>未来 7 天关键节点</h3>
+                </div>
+              </div>
+              <div id="upcoming-list" class="stack-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="board">
+          <div class="toolbar">
+            <label class="filter-box">
+              <span>状态筛选</span>
+              <select id="status-filter"></select>
+            </label>
+            <label class="filter-box">
+              <span>优先级</span>
+              <select id="priority-filter">
+                <option value="all">全部</option>
+                <option value="high">高</option>
+                <option value="medium">中</option>
+                <option value="low">低</option>
+              </select>
+            </label>
+          </div>
+          <div class="kanban-board" id="kanban-board"></div>
+        </section>
+
+        <section class="view" data-view-panel="calendar">
+          <div class="calendar-layout">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Weekly Calendar</p>
+                  <h3>未来七天安排</h3>
+                </div>
+              </div>
+              <div id="calendar-grid" class="calendar-grid"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Reminder Logic</p>
+                  <h3>提醒与跟进建议</h3>
+                </div>
+              </div>
+              <div id="reminder-list" class="stack-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="materials">
+          <div class="materials-stack">
+            <section class="panel ai-panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">AI Workspace</p>
+                  <h3 class="feature-title">简历与材料工作台</h3>
+                </div>
+                <span class="tag">AI Assist</span>
+              </div>
+              <div class="ai-layout">
+                <div class="ai-summary" id="ai-summary"></div>
+                <div class="ai-prompts" id="ai-prompts"></div>
+              </div>
+              <div class="ai-chat-shell">
+                <div class="ai-chat-feed">
+                  <div class="chat-bubble assistant">
+                    我可以帮你一起改简历、补作品集要点，或者把你的经历改写成更适合产品经理岗位的版本。
+                  </div>
+                  <div class="chat-bubble user">
+                    美团我来啦。
+                  </div>
+                </div>
+                <div class="ai-chat-input">
+                  <input type="text" placeholder="输入你想让 AI 帮你处理的内容，例如：帮我重写自我介绍" />
+                  <button class="primary-button" type="button">发送</button>
+                </div>
+              </div>
+            </section>
+
+            <div class="dashboard-grid materials-layout">
+              <section class="panel">
+                <div class="panel-head">
+                  <div>
+                    <p class="eyebrow">Material Hub</p>
+                    <h3 class="feature-title">通用求职材料</h3>
+                  </div>
+                </div>
+                <div id="material-list" class="stack-list"></div>
+              </section>
+              <section class="panel">
+                <div class="panel-head">
+                  <div>
+                    <p class="eyebrow">Gap Analysis</p>
+                    <h3 class="feature-title">岗位缺失材料</h3>
+                  </div>
+                </div>
+                <div id="material-gap-list" class="stack-list"></div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="admin">
+          <div class="toolbar admin-toolbar">
+            <div class="admin-toolbar-copy">
+              <p class="eyebrow">Ops Snapshot</p>
+              <h3>平台级假设数据与链路分析</h3>
+            </div>
+            <button class="ghost-button" type="button">导出数据</button>
+          </div>
+          <div class="metric-grid admin-grid" id="admin-metrics"></div>
+          <div class="dashboard-grid admin-layout">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Business Overview</p>
+                  <h3>业务概览</h3>
+                </div>
+              </div>
+              <div id="business-list" class="stack-list"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Platform KPI</p>
+                  <h3>平台核心规模指标</h3>
+                </div>
+              </div>
+              <div id="kpi-list" class="stack-list"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Process Metrics</p>
+                  <h3>过程指标与转化率</h3>
+                </div>
+              </div>
+              <div id="process-list" class="stack-list"></div>
+            </section>
+          </div>
+          <div class="dashboard-grid admin-layout">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Funnel Analytics</p>
+                  <h3>用户链路转化</h3>
+                </div>
+              </div>
+              <div id="journey-map" class="stack-list"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Funnel Analytics</p>
+                  <h3>阶段漏斗</h3>
+                </div>
+              </div>
+              <div id="funnel-list" class="stack-list"></div>
+            </section>
+          </div>
+          <div class="dashboard-grid admin-layout">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Event Feed</p>
+                  <h3>真实埋点事件流</h3>
+                </div>
+              </div>
+              <div id="event-list" class="stack-list"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Insights</p>
+                  <h3>分析结论 / 优化建议</h3>
+                </div>
+              </div>
+              <div id="insight-list" class="stack-list"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <aside class="drawer" id="detail-drawer">
+      <div class="drawer-card">
+        <button class="drawer-close" id="drawer-close" aria-label="关闭详情">×</button>
+        <div id="drawer-content"></div>
+      </div>
+    </aside>
+
+    <div class="modal hidden" id="application-modal">
+      <div class="modal-card">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">New Application</p>
+            <h3>新增岗位申请</h3>
+          </div>
+          <button class="drawer-close" id="modal-close" aria-label="关闭弹窗">×</button>
+        </div>
+        <form id="application-form" class="form-grid">
+          <label>
+            <span>公司名称</span>
+            <input name="company" required placeholder="如：美团" />
+          </label>
+          <label>
+            <span>岗位名称</span>
+            <input name="role" required placeholder="如：产品经理实习生" />
+          </label>
+          <label>
+            <span>城市</span>
+            <input name="city" required placeholder="北京 / 上海 / 杭州" />
+          </label>
+          <label>
+            <span>截止日期</span>
+            <input name="deadline" type="date" required />
+          </label>
+          <label>
+            <span>优先级</span>
+            <select name="priority">
+              <option value="high">高</option>
+              <option value="medium" selected>中</option>
+              <option value="low">低</option>
+            </select>
+          </label>
+          <label>
+            <span>当前状态</span>
+            <select name="stage"></select>
+          </label>
+          <label class="full-width">
+            <span>备注</span>
+            <textarea
+              name="notes"
+              rows="4"
+              placeholder="记录内推人、面试准备方向或 JD 关键词"
+            ></textarea>
+          </label>
+          <button class="primary-button full-width" type="submit">创建申请</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
